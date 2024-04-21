@@ -2,7 +2,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "@repo/db/client";
-import { text } from "stream/consumers";
 
 export async function p2pTransfer(to: string, amount: number) {
   console.log("trnasfer function called");
@@ -52,8 +51,13 @@ export async function p2pTransfer(to: string, amount: number) {
     });
     console.log("balance increased");
 
-    await tx.p2pTransfer.create()
-        
-    }});
+    await tx.p2pTransfer.create({
+      data: {
+        fromUserId: from,
+        toUserId: toUser.id,
+        amount,
+        timestamp: new Date(),
+      },
+    });
   });
 }
